@@ -37,6 +37,6 @@ public class MemoryBlock {
 	 * For example: (208,10)
 	 */
 	public String toString() {
-		return "(" + baseAddress + " , " + length +")";
+		return "(" + baseAddress + " , " + length + ")";
 	}
 }
