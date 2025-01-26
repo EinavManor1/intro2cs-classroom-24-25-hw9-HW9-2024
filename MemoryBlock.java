@@ -36,7 +36,9 @@ public class MemoryBlock {
 	 * The block's contents appears within parentheses.
 	 * For example: (208,10)
 	 */
+	
+	@Override
 	public String toString() {
-		return "(" + baseAddress + " , " + length +")";
+		return "(" + baseAddress + " , " + length + ")";
 	}
 }
