@@ -1,5 +1,3 @@
-import java.util.Comparator;
-
 public class MemorySpace {
 
     LinkedList allocatedList;
@@ -24,52 +22,51 @@ public class MemorySpace {
      * @return The base address of the allocated block, or -1 if unable to allocate.
      */
     public int malloc(int length) {     
-		if (length <= 0) return -1; // Invalid allocation size
-
-		MemoryBlock selectedBlock = null;
-		int selectedIndex = -1;
-
-		// Find the smallest block that can accommodate the requested size
+		if (length <= 0) return -1;
+	
+		MemoryBlock selectedMemoryBlock = null;
+		int smallestBlockIndex = -1;
+	
 		for (int i = 0; i < freeList.getSize(); i++) {
 			MemoryBlock block = freeList.getBlock(i);
 			if (block.getLength() >= length) {
-				if (selectedBlock == null || block.getLength() < selectedBlock.getLength()) {
-					selectedBlock = block;
-					selectedIndex = i;
+				if (selectedMemoryBlock == null || block.getLength() < selectedMemoryBlock.getLength()) {
+					selectedMemoryBlock = block;
+					smallestBlockIndex = i;
 				}
 			}
 		}
-
-		// If no suitable block is found, defragment and search again
-		if (selectedBlock == null) {
+	
+		if (selectedMemoryBlock == null) {
 			defrag();
-
+	
 			for (int i = 0; i < freeList.getSize(); i++) {
 				MemoryBlock block = freeList.getBlock(i);
 				if (block.getLength() >= length) {
-					if (selectedBlock == null || block.getLength() < selectedBlock.getLength()) {
-						selectedBlock = block;
-						selectedIndex = i;
+					if (selectedMemoryBlock == null || block.getLength() < selectedMemoryBlock.getLength()) {
+						selectedMemoryBlock = block;
+						smallestBlockIndex = i;
 					}
 				}
 			}
-
-			if (selectedBlock == null) return -1; // Still no suitable block
+	
+			if (selectedMemoryBlock == null) {
+				return -1; 
+			}
 		}
-
-		int baseAddress = selectedBlock.getBaseAddress();
-
-		if (selectedBlock.getLength() == length) {
-			freeList.remove(selectedIndex); // Exact match, remove the block
+	
+		int baseAddress = selectedMemoryBlock.getBaseAddress();
+	
+		if (selectedMemoryBlock.getLength() == length) {
+			freeList.remove(smallestBlockIndex);
 		} else {
-			// Adjust block for partial allocation
-			selectedBlock.setLength(selectedBlock.getLength() - length);
-			selectedBlock.setBaseAddress(selectedBlock.getBaseAddress() + length);
+			selectedMemoryBlock.setLength(selectedMemoryBlock.getLength() - length);
+			selectedMemoryBlock.setBaseAddress(selectedMemoryBlock.getBaseAddress() + length); // Adjust baseAddress
 		}
-
-		allocatedList.addLast(new MemoryBlock(baseAddress, length)); // Add to allocated list
+		
+		allocatedList.addLast(new MemoryBlock(baseAddress, length));
 		return baseAddress;
-}
+	}
 	
 	public void free(int address) {
 		for (int i = 0; i < allocatedList.getSize(); i++) {
@@ -77,8 +74,6 @@ public class MemorySpace {
 	
 			if (block.getBaseAddress() == address) {
 				allocatedList.remove(i);
-	
-				// Insert block back into freeList in sorted order
 				int insertIndex = 0;
 				for (int j = 0; j < freeList.getSize(); j++) {
 					if (block.getBaseAddress() < freeList.getBlock(j).getBaseAddress()) {
@@ -88,7 +83,7 @@ public class MemorySpace {
 				}
 	
 				freeList.add(insertIndex, block);
-				defrag(); // Merge adjacent blocks
+				defrag(); 
 				return;
 			}
 		}
@@ -100,25 +95,26 @@ public class MemorySpace {
      * Performs defragmentation of the free list by merging adjacent blocks.
      */
     public void defrag() {
-        if (freeList.getSize() <= 1) return; // Nothing to defragment
+        if (freeList.getSize() <= 1) return;
 
-		// Sort the freeList by baseAddress
-		freeList.sort(Comparator.comparingInt(MemoryBlock::getBaseAddress));
+		
+        Node current = freeList.getFirst();
+        while (current != null && current.getNext() != null) {
+            MemoryBlock currentBlock = current.getBlock();
+            MemoryBlock nextBlock = current.getNext().getBlock();
 
-		// Merge adjacent blocks
-		Node current = freeList.getFirst();
-		while (current != null && current.getNext() != null) {
-			MemoryBlock currentBlock = current.getBlock();
-			MemoryBlock nextBlock = current.getNext().getBlock();
-
+            if (currentBlock.getBaseAddress() + currentBlock.getLength() == nextBlock.getBaseAddress()) {
+                currentBlock.setLength(currentBlock.getLength() + nextBlock.getLength());
+                freeList.remove(current.getNext());
+            } else {
+                current = current.getNext();
+            }
 			if (currentBlock.getBaseAddress() + currentBlock.getLength() == nextBlock.getBaseAddress()) {
 				currentBlock.setLength(currentBlock.getLength() + nextBlock.getLength());
-				freeList.remove(current.getNext());
-			} else {
-				current = current.getNext();
+				freeList.remove(current.next);
 			}
 		}
-	}
+    }
 
     /**
      * Returns a textual representation of the current memory space.
