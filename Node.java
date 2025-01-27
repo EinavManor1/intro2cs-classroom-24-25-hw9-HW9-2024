@@ -1,27 +1,46 @@
 /**
- * Represents a node in a linked list. Each node points to a MemoryBlock object. 
+ * Represents a node in the linked list, containing a MemoryBlock and a reference to the next node.
  */
 public class Node {
 
-	MemoryBlock block;  // The memory block that this node points at
-	Node next = null;   // The next node in the list
+    public  MemoryBlock block;
+    public  Node next;
 
-	/**
-	 * Constructs a new node, pointing to the given memory block.
-	 * 
-	 * @param block
-	 *        the given memory block
-	 */
-	public Node(MemoryBlock block) {
-		this.block = block;
-	}
-	
-	/**
-	 * A textual representation of this node, for debugging.
-	 * The node's contents, which is a memory block, appears within
-	 * curly brackets. For example: {(208,10)}. 
-	 */
-	public String toString() {
-		return "{" + block + "}";
-	}
+    public Node(MemoryBlock block) {
+        this.block = block;
+        this.next = null;
+    }
+
+    public MemoryBlock getBlock() {
+        return block;
+    }
+
+    public void setBlock(MemoryBlock block) {
+        this.block = block;
+    }
+
+    public Node getNext() {
+        return next;
+    }
+
+    public void setNext(Node next) {
+        this.next = next;
+    }
+
+    public boolean hasNext() {
+        return this.next != null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Node node = (Node) obj;
+        return block.equals(node.block);
+    }
+
+    @Override
+    public String toString() {
+        return block.toString();
+    }
 }
