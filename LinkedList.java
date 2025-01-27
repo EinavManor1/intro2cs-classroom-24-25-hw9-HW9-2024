@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Represents a list of Nodes. 
  */
@@ -323,4 +327,33 @@ public class LinkedList {
 	
 		return result.toString();
 	}
+	/**
+ * Sorts the linked list using the given comparator.
+ *
+ * @param comparator a comparator to define the order of the memory blocks
+ */
+public void sort(Comparator<MemoryBlock> comparator) {
+    if (size <= 1) {
+        return;
+    }
+
+    List<MemoryBlock> blocks = new ArrayList<>();
+    Node current = first;
+    while (current != null) {
+        blocks.add(current.getBlock());
+        current = current.getNext();
+    }
+
+    // Sort the array
+    blocks.sort(comparator);
+
+    // Reconstruct the linked list in sorted order
+    first = null;
+    last = null;
+    size = 0;
+
+    for (MemoryBlock block : blocks) {
+        addLast(block);
+    }
+}
 }
