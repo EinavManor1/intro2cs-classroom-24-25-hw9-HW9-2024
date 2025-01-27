@@ -33,7 +33,7 @@ public class MemoryBlock {
         }
         this.length = length;
     }
-
+	
     public boolean canMerge(MemoryBlock other) {
         return other != null && this.baseAddress + this.length == other.baseAddress;
     }
