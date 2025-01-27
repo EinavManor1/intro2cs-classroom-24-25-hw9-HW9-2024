@@ -234,13 +234,11 @@ public class LinkedList {
 		}
 	
 		if (index == 0) {
-			// Remove the first node
 			first = first.next;
 			if (size == 1) {
-				last = null; // Update last if the list becomes empty
+				last = null;
 			}
 		} else {
-			// Traverse to the node before the one to remove
 			Node prev = getNode(index - 1);
 			Node removedNode = prev.next;
 			prev.next = removedNode.next;
