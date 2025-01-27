@@ -18,6 +18,7 @@ public class MemoryBlock {
     public int getBaseAddress() {
         return baseAddress;
     }
+       
 
     public void setBaseAddress(int baseAddress) {
         this.baseAddress = baseAddress;

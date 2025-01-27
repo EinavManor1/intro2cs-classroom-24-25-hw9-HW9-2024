@@ -14,7 +14,7 @@ public class Node {
     public MemoryBlock getBlock() {
         return block;
     }
-
+   
     public void setBlock(MemoryBlock block) {
         this.block = block;
     }

@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+
 /**
  * Represents a list of Nodes.
  */
@@ -126,6 +129,29 @@ public class LinkedList {
 
         return -1; 
     }
+	 public void sortByBaseAddress() {
+        if (first == null || first.next == null) {
+            return; // Already sorted
+        }
+
+        // Convert LinkedList to ArrayList for easier sorting
+        ArrayList<MemoryBlock> blocks = new ArrayList<>();
+        Node current = first;
+        while (current != null) {
+            blocks.add(current.block);
+            current = current.next;
+        }
+
+        // Sort using Java's sort
+        blocks.sort(Comparator.comparingInt(MemoryBlock::getBaseAddress));
+
+        // Rebuild the linked list from the sorted blocks
+        first = null;
+        size = 0;
+        for (MemoryBlock block : blocks) {
+            addLast(block);
+        }
+    }
 
 
     public void remove(Node node) {
@@ -229,16 +255,16 @@ public class LinkedList {
 		first = prev;
 	}
     @Override
-public String toString() {
-    StringBuilder result = new StringBuilder();
-    Node current = first;
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		Node current = first;
 
-    while (current != null) {
-        result.append(current.block.toString());
-        if (current.next != null) result.append(" ");
-        current = current.next;
-    }
+		while (current != null) {
+			result.append(current.block.toString());
+			if (current.next != null) result.append(" ");
+			current = current.next;
+		}
 
-    return result.toString();
-}
+		return result.toString();
+	}
 }
