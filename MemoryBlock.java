@@ -4,60 +4,39 @@
  */
 public class MemoryBlock {
 
-    private int baseAddress;
-    private int length;
+	int baseAddress;  // the address where this memory block begins
+	int length;       // the length of this memory block, in words
 
-    public MemoryBlock(int baseAddress, int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Block length cannot be negative.");
-        }
-        this.baseAddress = baseAddress;
-        this.length = length;
-    }
+	/**
+	 * Constructs a new memory block with a given base address and length in words 
+	 * 
+	 * @param baseAddress
+	 *        the address of the first word in this block
+	 * @param length
+	 *        the length of this memory block, in words
+	 */
+	public MemoryBlock(int baseAddress, int length) {
+		this.baseAddress = baseAddress;
+		this.length = length;
+	}
 
-    public int getBaseAddress() {
-        return baseAddress;
-    }
-       
+	/**
+	 * Checks if this block has the same base address and length as the given block
+	 * 
+	 * @param other
+	 *        the given block
+	 * @return true if this block equals the other block, false otherwise
+	 */
+	public boolean equals(MemoryBlock other) {
+		return baseAddress == other.baseAddress && length == other.length;
+	}
 
-    public void setBaseAddress(int baseAddress) {
-        this.baseAddress = baseAddress;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        if (length < 0) {
-            throw new IllegalArgumentException("Block length cannot be negative.");
-        }
-        this.length = length;
-    }
-	
-    public boolean canMerge(MemoryBlock other) {
-        return other != null && this.baseAddress + this.length == other.baseAddress;
-    }
-
-    public void merge(MemoryBlock other) {
-        if (other == null || this.baseAddress + this.length != other.baseAddress) {
-            throw new IllegalArgumentException("Blocks cannot be merged. Ensure they are adjacent.");
-        }
-        this.length += other.length;
-    }
-
-    public MemoryBlock split(int splitLength) {
-        if (splitLength <= 0 || splitLength > this.length) {
-            throw new IllegalArgumentException("Invalid split length.");
-        }
-        MemoryBlock newBlock = new MemoryBlock(this.baseAddress, splitLength);
-        this.baseAddress += splitLength;
-        this.length -= splitLength;
-        return newBlock;
-    }
-
-    @Override
-    public String toString() {
-        return "(" + baseAddress + " , " + length + ")";
-    }
+	/**
+	 * A textual representation of this memory block, for debugging.
+	 * The block's contents appears within parentheses.
+	 * For example: (208,10)
+	 */
+	public String toString() {
+		return "(" + baseAddress + " , " + length +")";
+	}
 }

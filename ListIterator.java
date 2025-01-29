@@ -5,8 +5,8 @@ public class ListIterator {
     public Node current;
 
     /** Constructs a list iterator, starting at the given node */
-    public ListIterator(Node start) {
-        this.current = start;
+    public ListIterator(Node node) {
+        current = node;
     }
 
     /** Checks if this iterator has more nodes to process */
